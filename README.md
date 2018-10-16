@@ -221,15 +221,42 @@ sudo apt-get update && sudo apt-get install influxdb
 
 https://docs.influxdata.com/influxdb/v1.6/administration/authentication_and_authorization/
 
-`/etc/influxdb/influxdb.conf`
+Make the following changes in `/etc/influxdb/influxdb.conf`
+
+```
+dir = "/data/influxdb/meta"
+dir = "/data/influxdb/data"
+wal-dir = "/data/influxdb/wal"
+enabled = true
+bind-address = ":8086"
+auth-enabled = false
+log-enabled = true
+write-tracing = false
+pprof-enabled = false
+https-enabled = false
+https-certificate = "/etc/ssl/influxdb.pem"
+```
+
+and create a new directory for data.
+
+```
+mkdir /data/influxdb
+sudo chown influxdb:influxdb /data/influxdb
+```
+
+Start the service.
 
 ```
 sudo service influxdb start
 ```
 
+Run `influx` and create admin user.
+
 ```
-CREATE USER admin WITH PASSWORD '<password>' WITH ALL PRIVILEGES
+CREATE USER admin WITH PASSWORD 'ADMINPASSWORD' WITH ALL PRIVILEGES
 ```
+
+In your security group, under inbound rules add custom TCP rule for port 8086.
 
 
 
