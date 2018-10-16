@@ -39,6 +39,11 @@ vim /etc/fstab
 sudo mount -a
 ```
 
+```
+sudo apt-get install git
+git clone https://github.com/sensemakersamsterdam/IoT-data-platform.git
+```
+
 
 
 ## TTN

@@ -16,8 +16,7 @@ region = config.get('TTN', 'Region')
 appid = config.get('TTN', 'AppID')
 appkey = config.get('TTN', 'AppKey')
 
-parent_dir = pathlib.Path(__file__).parent.resolve()
-json_filename = str(parent_dir / "data.json")
+json_filename = "/data/data.json"
 
 
 def on_connect(mqttc, obj, flags, rc):
@@ -38,9 +37,10 @@ def on_message(mqttc, obj, msg):
     if msg.retain==1:
         logger.info("This is a retained message.")
     #msg_json = json.loads(str(msg.payload.decode("utf-8")))
+    json_str = str(msg.payload.decode("utf-8"))
 
     with open(json_filename, "a") as json_file:
-        myfile.write(str(msg.payload.decode("utf-8")))
+        json_file.write(f'\n{json_str}')
 
 
 def on_publish(mqttc, obj, mid):
