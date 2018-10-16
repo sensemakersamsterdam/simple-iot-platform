@@ -9,12 +9,14 @@ chmod 400 sensemakers.pem
 ssh -i sensemakers.pem ubuntu@ec2-18-202-35-226.eu-west-1.compute.amazonaws.com
 ```
 
+Mount external EBS volume.
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+
 ```
 /dev/sda1
 /dev/sdb
 ```
-
-https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 
 ```
 lsblk
@@ -39,6 +41,8 @@ vim /etc/fstab
 sudo mount -a
 ```
 
+Install git and clone the IoT data platform repository.
+
 ```
 sudo apt-get install git
 git clone https://github.com/sensemakersamsterdam/IoT-data-platform.git
@@ -49,6 +53,8 @@ git clone https://github.com/sensemakersamsterdam/IoT-data-platform.git
 ## TTN
 
 https://console.thethingsnetwork.org/applications/sewerwatch
+
+Install Anaconda.
 
 ```
 cd /tmp
@@ -62,6 +68,8 @@ conda update anaconda
 pip install --upgrade pip
 ```
 
+Install Mosquitto client.
+
 ```
 sudo apt-get update
 sudo apt-get install mosquitto-clients
@@ -73,17 +81,7 @@ mosquitto_sub -h eu.thethings.network -t '+/devices/+/events/activations' -u 'se
 mosquitto_sub -h eu.thethings.network -t '+/devices/+/up' -u 'sewerwatch' -P ttn-account-v2.ACCESSKEY -v
 ```
 
-```
-pip install paho-mqtt
-```
-
-```
-sudo chmod 777 /data
-```
-
-```
-cd /home/ubuntu && nohup python mqtt_to_json.py > /home/ubuntu/mqtt_to_json.out 2>&1 &
-```
+TTN is sending data in the following format.
 
 ```
 {
@@ -146,25 +144,48 @@ cd /home/ubuntu && nohup python mqtt_to_json.py > /home/ubuntu/mqtt_to_json.out 
 }
 ```
 
+Make sure the mounted external EBS volume is accessible.
+Data and log files will be stored there.
+
+```
+sudo chmod 777 /data
+```
+
+Run the python script to subscribe to the MQTT topic and append JSON to a file.
+
+```
+pip install -r requirements.txt
+mkdir /data/logs
+cd /home/ubuntu && nohup python mqtt_to_json.py > /data/logs/mqtt_to_json.out 2>&1 &
+```
+
 
 
 ## Jupyter
 
-Generate new password
+Choose a password for Jupyter and encode it.
 
 `from notebook.auth import passwd; passwd()`
 
+You will get the password in the following encoded form. This will be used in the Jupyter configuration file.
+
 `sha1:ENCRYPTEDPASSWORD`
+
+Create an SSL certificate.
 
 ```
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout sensemakers.key -out sensemakers.crt \
 -subj "/C=NL/ST=Noord Holland/L=Amsterdam/O=Sensemakers/CN=David Salek/emailAddress=salekd@gmail.com"
 ```
 
+Generate the jupyter configuration file
+
 ```
 jupyter notebook --generate-config
 vim .jupyter/jupyter_notebook_config.py
 ```
+
+and make the following changes.
 
 ```
 c.NotebookApp.certfile = '/home/ubuntu/sensemakers.crt'
@@ -174,13 +195,11 @@ c.NotebookApp.open_browser = False
 c.NotebookApp.password = 'sha1:ENCRYPTEDPASSWORD'
 ```
 
-```
-mkdir notebooks
-```
+Make sure the `/data` directory is accessible by setting an environmental variable and run Jupyter from the `notebooks` directory.
 
 ```
 export JUPYTER_PATH=/data
-cd /home/ubuntu/notebooks && nohup jupyter notebook > /home/ubuntu/jupyter.out 2>&1 &
+cd /home/ubuntu/python/notebooks && nohup jupyter notebook > /data/logs/jupyter.out 2>&1 &
 ```
 
 In your security group, under inbound rules add custom TCP rule for port 8888.
@@ -190,6 +209,8 @@ https://ec2-18-202-35-226.eu-west-1.compute.amazonaws.com:8888/
 
 
 ## InfluxDB
+
+Install InfluxDB.
 
 ```
 curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
@@ -213,6 +234,8 @@ CREATE USER admin WITH PASSWORD '<password>' WITH ALL PRIVILEGES
 
 
 ## Grafana
+
+Install Grafana.
 
 http://docs.grafana.org/installation/debian/
 
