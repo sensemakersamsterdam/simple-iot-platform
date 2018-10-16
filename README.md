@@ -151,7 +151,7 @@ Data and log files will be stored there.
 sudo chmod 777 /data
 ```
 
-Run the python script to subscribe to the MQTT topic and append JSON to a file.
+Run the `mqtt_to_json.py` python script to subscribe to the MQTT topic and append the full JSON to a file.
 
 ```
 pip install -r requirements.txt
@@ -262,10 +262,26 @@ Create a database.
 CREATE DATABASE sensemakers
 ```
 
+Run the `mqtt_to_influx.py` python script to subscribe to the MQTT topic and write data to InfluxDB.
+
+```
+cd /home/ubuntu && nohup python mqtt_to_influx.py > /data/logs/mqtt_to_influx.out 2>&1 &
+```
+
 In your security group, under inbound rules add custom TCP rule for port 8086.
+The database can be accessed externally in the following way.
 
 ```
 influx -host ec2-18-202-35-226.eu-west-1.compute.amazonaws.com -port 8086 -username admin -password ADMINPASSWORD
+```
+
+```
+SHOW DATABASES
+USE sensemakers
+SHOW MEASUREMENTS
+SHOW SERIES
+SHOW TAG KEYS
+SHOW FIELD KEYS
 ```
 
 

@@ -39,6 +39,7 @@ def on_message(mqttc, obj, msg):
     #msg_json = json.loads(str(msg.payload.decode("utf-8")))
     json_str = str(msg.payload.decode("utf-8"))
 
+    # Write the full JSON received from the TTN MQTT topic to a file.
     with open(json_filename, "a") as json_file:
         json_file.write(f'\n{json_str}')
 
