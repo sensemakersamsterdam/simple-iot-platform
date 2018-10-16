@@ -11,7 +11,7 @@ logger = logging.getLogger(__file__)
 
 # Read config file
 config = ConfigParser()
-config.read('ttn.cfg')
+config.read('iot.cfg')
 region = config.get('TTN', 'Region')
 appid = config.get('TTN', 'AppID')
 appkey = config.get('TTN', 'AppKey')

@@ -256,6 +256,12 @@ Run `influx` and create admin user.
 CREATE USER admin WITH PASSWORD 'ADMINPASSWORD' WITH ALL PRIVILEGES
 ```
 
+Create a database.
+
+```
+CREATE DATABASE sensemakers
+```
+
 In your security group, under inbound rules add custom TCP rule for port 8086.
 
 
@@ -277,3 +283,5 @@ sudo dpkg -i grafana_5.3.0_amd64.deb
 ```
 sudo service grafana-server start
 ```
+
+In your security group, under inbound rules add custom TCP rule for port 3000.
