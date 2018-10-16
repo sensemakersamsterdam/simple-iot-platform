@@ -264,6 +264,10 @@ CREATE DATABASE sensemakers
 
 In your security group, under inbound rules add custom TCP rule for port 8086.
 
+```
+influx -host ec2-18-202-35-226.eu-west-1.compute.amazonaws.com -port 8086 -username admin -password ADMINPASSWORD
+```
+
 
 
 ## Grafana
@@ -308,3 +312,10 @@ sudo service grafana-server start
 ```
 
 In your security group, under inbound rules add custom TCP rule for port 3000.
+
+http://ec2-18-202-35-226.eu-west-1.compute.amazonaws.com:3000/
+
+Add datasource of type InfluxDB with url http://ec2-18-202-35-226.eu-west-1.compute.amazonaws.com:8086
+Do not tick any authentication and specify the database, user and password in the InfluxDB Details section.
+
+Create a new dashboard.
