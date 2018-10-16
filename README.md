@@ -278,7 +278,30 @@ sudo apt-get install -y adduser libfontconfig
 sudo dpkg -i grafana_5.3.0_amd64.deb 
 ```
 
-`/etc/grafana/grafana.ini`
+Make the following changes in `/etc/grafana/grafana.ini`
+
+```
+data = /data/grafana
+protocol = http
+http_port = 3000
+type = sqlite3
+host = 127.0.0.1:3306
+name = grafana
+user = root
+path = grafana.db
+admin_user = admin
+admin_password = ADMINPASSWORD
+enabled = true
+```
+
+and create a new directory for data.
+
+```
+mkdir /data/grafana
+chown 777 /data/grafana
+```
+
+Start the service.
 
 ```
 sudo service grafana-server start
