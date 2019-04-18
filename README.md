@@ -1,4 +1,8 @@
-# Sensemakers IoT platform
+# Simple IoT platform
+
+This repository shows how to deploy a simple IoT platform on a single virtual machine.
+
+
 
 ## EC2 and attached volume
 
@@ -50,7 +54,7 @@ git clone https://github.com/sensemakersamsterdam/IoT-data-platform.git
 
 
 
-## TTN
+## TTN and MQTT
 
 https://console.thethingsnetwork.org/applications/sewerwatch
 
